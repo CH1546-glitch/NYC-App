@@ -47,8 +47,8 @@ so that **I can quickly access Search, Login/Signup, and Add Building from any p
   - [x] Verify mobile menu opens/closes correctly
   - [x] Confirm touch targets meet minimum 44x44px accessibility requirement
 
-- [x] Task 4: Verify transparent mode on home page (AC: #1)
-  - [x] Navigation is transparent over hero on home page
+- [x] Task 4: Verify navigation visibility on home page (AC: #1)
+  - [x] Navigation uses white bar (`bg-white/95`) over hero for visibility
   - [x] Navigation gets background on other pages
   - [x] Transition is smooth when navigating between pages
 
@@ -72,7 +72,7 @@ so that **I can quickly access Search, Login/Signup, and Add Building from any p
 
 **Existing Implementation** (`client/src/components/navigation.tsx`):
 - Fixed positioning with `fixed top-0 left-0 right-0 z-50`
-- Transparent mode on home page with backdrop blur
+- White bar (`bg-white/95`) on home page for visibility over video
 - Desktop links: Search, Add Building, Admin (auth only)
 - Mobile hamburger menu with responsive design
 - User avatar dropdown for authenticated users
@@ -182,8 +182,8 @@ interface NavigationProps {
 ### Previous Story Intelligence
 
 **From Story 1-1 (Home Page Hero Section)**:
-- Navigation renders with `transparent` prop over hero
-- Uses backdrop blur for readability: `backdrop-blur-sm`
+- Navigation renders with `transparent` prop over hero (now uses white bar for visibility)
+- Uses backdrop blur for readability: `backdrop-blur-md`
 - Tested responsive behavior across viewports
 - No TypeScript errors or build issues encountered
 
@@ -230,7 +230,7 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - Navigation structure verified: `fixed top-0 left-0 right-0 z-50`
 - Links validated: Search → `/search`, Add Building → `/add-building`, Sign In → `/api/login`
 - Responsive behavior confirmed: hamburger menu on mobile, horizontal links on desktop
-- Transparent mode working: uses `transparent && isHome` logic with backdrop blur
+- Home page visibility: uses white bar (`bg-white/95`) with `backdrop-blur-md` for visibility over video
 
 **Task 5 - Accessibility Fixes:**
 - Added `aria-label` to mobile menu button (dynamic: "Open menu" / "Close menu")
@@ -259,6 +259,7 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 | 2026-01-11 | UI refinements: black Sign In button, larger logo/brand, taller navbar, bolder text | client/src/components/navigation.tsx |
 | 2026-01-11 | Changed icon from Building2 to Landmark, added sharp stroke styling | client/src/components/navigation.tsx |
 | 2026-01-11 | Centered nav links with absolute positioning, serif font on Sign In | client/src/components/navigation.tsx |
+| 2026-01-11 | Changed home page nav from transparent to white bar for video visibility | client/src/components/navigation.tsx |
 
 ### File List
 
@@ -287,6 +288,13 @@ _Files created or modified during implementation:_
 - [x] [MEDIUM] Recent UI changes not in Change Log - Added all recent changes to Change Log
 - [x] [MEDIUM] Redundant font classes on Sign In - Removed `font-medium`, kept `font-serif` `navigation.tsx:129`
 
+### Review #3 Issues Found: 0 High, 2 Medium, 2 Low
+
+### Review #3 Fixed Issues
+
+- [x] [MEDIUM] Story documentation mismatch - Updated Task 4, Dev Notes, Completion Notes to reflect white bar
+- [x] [MEDIUM] Change Log missing white bar change - Added entry for transparent → white bar change
+
 ### Remaining Issues (Non-blocking)
 
 - [ ] [LOW] Avatar button retains `rounded-full` (intentional for circular avatar design)
@@ -295,6 +303,7 @@ _Files created or modified during implementation:_
 - [ ] [LOW] Absolute positioning may cause overlap on narrow tablets
 - [ ] [LOW] Mobile menu lacks close-on-outside-click
 - [ ] [LOW] Mobile nav links left-aligned vs desktop centered
+- [ ] [LOW] `transparent` prop name is now semantically misleading (consider renaming to `heroMode`)
 
 ### Verification
 
