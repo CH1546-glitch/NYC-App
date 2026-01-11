@@ -1,0 +1,143 @@
+# Workflow Status - NYC Apartment Review Platform
+# BMad Method Workflow Tracking
+# Generated: 2026-01-10
+
+# STATUS DEFINITIONS:
+# ==================
+# Initial Status (before completion):
+#   - required: Must be completed to progress
+#   - optional: Can be completed but not required
+#   - recommended: Strongly suggested but not required
+#   - conditional: Required only if certain conditions met (e.g., if_has_ui)
+#
+# Completion Status:
+#   - {file-path}: File created/found (e.g., "docs/prd.md")
+#   - skipped: Optional/conditional workflow that was skipped
+
+generated: "2026-01-10"
+project: "NYC Apartment Review Platform"
+project_type: "web-application"
+selected_track: "method"
+field_type: "brownfield"
+workflow_path: "method-brownfield"
+
+workflow_status:
+  # Phase 0: Documentation (Brownfield Prerequisite)
+  - phase: 0
+    name: "Documentation"
+    workflows:
+      - id: document-project
+        name: "Document Existing Project"
+        status: "docs/index.md"
+        agent: analyst
+        command: "/bmad:bmm:workflows:document-project"
+        purpose: "Analyze and document existing React/Express codebase"
+        completed: "2026-01-10"
+        outputs:
+          - docs/index.md
+          - docs/project-overview.md
+          - docs/architecture-client.md
+          - docs/architecture-server.md
+          - docs/api-contracts-server.md
+          - docs/data-models.md
+
+  # Phase 1: Analysis (Optional - User skipped)
+  - phase: 1
+    name: "Analysis"
+    workflows:
+      - id: brainstorm
+        name: "Brainstorming"
+        status: skipped
+        agent: analyst
+      - id: research
+        name: "Research"
+        status: skipped
+        agent: analyst
+      - id: product-brief
+        name: "Product Brief"
+        status: skipped
+        agent: analyst
+
+  # Phase 2: Planning
+  - phase: 2
+    name: "Planning"
+    workflows:
+      - id: prd
+        name: "Product Requirements Document"
+        status: "_bmad-output/planning-artifacts/prd.md"
+        agent: pm
+        command: "/bmad:bmm:workflows:create-prd"
+        note: "Imported from existing document"
+      - id: create-ux-design
+        name: "UX Design"
+        status: conditional
+        condition: "if_has_ui"
+        agent: ux-designer
+        command: "/bmad:bmm:workflows:create-ux-design"
+
+  # Phase 3: Solutioning
+  - phase: 3
+    name: "Solutioning"
+    workflows:
+      - id: create-architecture
+        name: "Architecture Design"
+        status: "_bmad-output/planning-artifacts/architecture.md"
+        agent: architect
+        command: "/bmad:bmm:workflows:create-architecture"
+        purpose: "Design system architecture aligned with existing codebase"
+        completed: "2026-01-10"
+        outputs:
+          - _bmad-output/planning-artifacts/architecture.md
+      - id: create-epics-and-stories
+        name: "Epics & Stories"
+        status: "_bmad-output/planning-artifacts/epics.md"
+        agent: pm
+        command: "/bmad:bmm:workflows:create-epics-and-stories"
+        completed: "2026-01-10"
+        outputs:
+          - _bmad-output/planning-artifacts/epics.md
+      - id: test-design
+        name: "Test Design"
+        status: optional
+        agent: tea
+        command: "/bmad:bmm:workflows:testarch-test-design"
+      - id: implementation-readiness
+        name: "Implementation Readiness Check"
+        status: "_bmad-output/planning-artifacts/implementation-readiness-report-2026-01-10.md"
+        agent: architect
+        command: "/bmad:bmm:workflows:check-implementation-readiness"
+        completed: "2026-01-10"
+        result: "READY"
+        outputs:
+          - _bmad-output/planning-artifacts/implementation-readiness-report-2026-01-10.md
+
+  # Phase 4: Implementation
+  - phase: 4
+    name: "Implementation"
+    workflows:
+      - id: sprint-planning
+        name: "Sprint Planning"
+        status: "_bmad-output/implementation-artifacts/sprint-status.yaml"
+        agent: sm
+        command: "/bmad:bmm:workflows:sprint-planning"
+        completed: "2026-01-10"
+        outputs:
+          - _bmad-output/implementation-artifacts/sprint-status.yaml
+      - id: create-story
+        name: "Create Story"
+        status: required
+        agent: sm
+        command: "/bmad:bmm:workflows:create-story"
+        note: "Create individual story files ready for development"
+      - id: dev-story
+        name: "Develop Story"
+        status: required
+        agent: dev
+        command: "/bmad:bmm:workflows:dev-story"
+        note: "Implement story tasks and update status"
+      - id: code-review
+        name: "Code Review"
+        status: required
+        agent: dev
+        command: "/bmad:bmm:workflows:code-review"
+        note: "Review implementation before marking complete"

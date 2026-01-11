@@ -44,7 +44,7 @@
   --chart-4: 43 89% 42%;
   --chart-5: 27 87% 45%;
   --font-sans: Inter, sans-serif;
-  --font-serif: Georgia, serif;
+  --font-serif: "Times New Roman", Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: .5rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
@@ -172,6 +172,16 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+  }
+
+  /* Hide scrollbar while maintaining scroll functionality */
+  html {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  html::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 }
 
