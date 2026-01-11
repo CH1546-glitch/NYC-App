@@ -1,8 +1,8 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { Building2, Search, Plus, LayoutDashboard, Menu, X, User, LogOut } from "lucide-react";
-import { useState } from "react";
+import { Landmark, Search, Plus, LayoutDashboard, Menu, X, User, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,9 +21,23 @@ export function Navigation({ transparent = false }: NavigationProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Close mobile menu on Escape key press (accessibility)
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [mobileMenuOpen]);
+
   const isHome = location === "/";
   const bgClass = transparent && isHome
-    ? "bg-transparent backdrop-blur-sm"
+    ? "bg-white/95 backdrop-blur-md border-b border-border"
     : "bg-background/95 backdrop-blur-md border-b border-border";
 
   const navLinks = [
@@ -38,21 +52,25 @@ export function Navigation({ transparent = false }: NavigationProps) {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${bgClass}`}>
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <Building2 className="h-7 w-7 text-primary" />
-            <span className="text-lg font-semibold tracking-tight hidden sm:inline">
-              NYC Reviews
-            </span>
-          </Link>
+        <div className="flex items-center h-20">
+          {/* Left: Logo and brand */}
+          <div className="flex-1 flex items-center">
+            <Link href="/" className="flex items-center gap-3">
+              <Landmark className="h-8 w-10" strokeWidth={1.5} strokeLinecap="square" strokeLinejoin="miter" />
+              <span className="font-serif text-2xl font-medium tracking-tight hidden sm:inline">
+                NYC Reviews
+              </span>
+            </Link>
+          </div>
 
-          <div className="hidden md:flex items-center gap-1">
+          {/* Center: Navigation links - absolutely centered */}
+          <div className="hidden md:flex items-center justify-center gap-2 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <Button
                   variant={location === link.href ? "secondary" : "ghost"}
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 rounded-none text-xs tracking-widest uppercase font-medium"
                   data-testid={`nav-${link.label.toLowerCase().replace(' ', '-')}`}
                 >
                   <link.icon className="h-4 w-4" />
@@ -65,7 +83,7 @@ export function Navigation({ transparent = false }: NavigationProps) {
                 <Button
                   variant={location === link.href ? "secondary" : "ghost"}
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 rounded-none text-xs tracking-widest uppercase font-medium"
                   data-testid={`nav-${link.label.toLowerCase()}`}
                 >
                   <link.icon className="h-4 w-4" />
@@ -75,9 +93,10 @@ export function Navigation({ transparent = false }: NavigationProps) {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Right: Auth buttons */}
+          <div className="flex-1 flex items-center justify-end gap-2">
             {isLoading ? (
-              <div className="h-9 w-20 bg-muted animate-pulse rounded-md" />
+              <div className="h-9 w-20 bg-muted animate-pulse rounded-none" />
             ) : isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -107,7 +126,7 @@ export function Navigation({ transparent = false }: NavigationProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button asChild size="sm" data-testid="button-login">
+              <Button asChild size="sm" className="rounded-none text-xs tracking-widest uppercase font-serif bg-black hover:bg-black/90 text-white border border-black" data-testid="button-login">
                 <a href="/api/login">Sign In</a>
               </Button>
             )}
@@ -115,8 +134,10 @@ export function Navigation({ transparent = false }: NavigationProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden rounded-none"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
               data-testid="button-mobile-menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -125,13 +146,14 @@ export function Navigation({ transparent = false }: NavigationProps) {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border py-4 space-y-2">
+          <div className="md:hidden border-t border-border py-4 space-y-1" role="menu">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-2"
+                  className="w-full justify-start gap-3 rounded-none text-xs tracking-widest uppercase font-medium"
                   onClick={() => setMobileMenuOpen(false)}
+                  role="menuitem"
                   data-testid={`mobile-nav-${link.label.toLowerCase().replace(' ', '-')}`}
                 >
                   <link.icon className="h-4 w-4" />
@@ -143,8 +165,9 @@ export function Navigation({ transparent = false }: NavigationProps) {
               <Link key={link.href} href={link.href}>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-2"
+                  className="w-full justify-start gap-3 rounded-none text-xs tracking-widest uppercase font-medium"
                   onClick={() => setMobileMenuOpen(false)}
+                  role="menuitem"
                   data-testid={`mobile-nav-${link.label.toLowerCase()}`}
                 >
                   <link.icon className="h-4 w-4" />

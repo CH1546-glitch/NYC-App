@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes mammoth:*)",
+      "Bash(find:*)",
+      "Skill(bmad:bmm:workflows:sprint-planning)",
+      "Skill(bmad:bmm:workflows:create-story)",
+      "Bash(tree:*)",
+      "Skill(bmad:bmm:workflows:dev-story)",
+      "Bash(npm run check:*)",
+      "Skill(bmad:bmm:workflows:code-review)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

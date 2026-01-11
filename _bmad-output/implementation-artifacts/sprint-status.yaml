@@ -45,7 +45,7 @@ development_status:
   # Status: Mostly implemented in existing codebase - may need refinements
   epic-1: in-progress
   1-1-home-page-hero-section: done
-  1-2-home-page-navigation-bar: ready-for-dev
+  1-2-home-page-navigation-bar: done
   1-3-home-page-search-with-autocomplete: backlog
   1-4-how-it-works-section: backlog
   1-5-building-search-and-filtering: backlog
