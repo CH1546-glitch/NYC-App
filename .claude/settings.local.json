@@ -9,7 +9,9 @@
       "Skill(bmad:bmm:workflows:dev-story)",
       "Bash(npm run check:*)",
       "Skill(bmad:bmm:workflows:code-review)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(curl:*)"
     ]
   }
 }

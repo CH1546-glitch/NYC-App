@@ -136,7 +136,7 @@ export function SearchAutocomplete({
             <Input
               type="search"
               placeholder={placeholder}
-              className="h-14 text-base border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 outline-none text-foreground rounded-none px-5 font-light"
+              className="h-14 text-base border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 outline-none text-foreground rounded-none px-5 font-light caret-black"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);

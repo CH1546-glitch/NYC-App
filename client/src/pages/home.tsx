@@ -32,15 +32,15 @@ export default function Home() {
           playsInline
           preload="metadata"
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         >
           <source src={heroVideo} type="video/mp4" />
           {/* Fallback for browsers that don't support video */}
           Your browser does not support the video tag.
         </video>
         {/* Fallback background while video loads */}
-        <div className="absolute inset-0 bg-neutral-900 -z-10 animate-pulse" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        <div className="absolute inset-0 bg-neutral-900 -z-10 animate-pulse pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 pointer-events-none" />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl font-normal text-white mb-12 leading-[1.1] tracking-tight">
