@@ -30,6 +30,19 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/buildings/autocomplete", async (req, res) => {
+    try {
+      const { q } = req.query;
+      // Validate query parameter - must be string, max 100 chars
+      const query = typeof q === "string" ? q.slice(0, 100) : "";
+      const suggestions = await storage.getBuildingsAutocomplete(query);
+      res.json(suggestions);
+    } catch (error) {
+      console.error("Error fetching autocomplete suggestions:", error);
+      res.status(500).json({ message: "Failed to fetch suggestions" });
+    }
+  });
+
   app.get("/api/buildings/:id", async (req, res) => {
     try {
       const building = await storage.getBuilding(req.params.id);

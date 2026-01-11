@@ -46,7 +46,7 @@ development_status:
   epic-1: in-progress
   1-1-home-page-hero-section: done
   1-2-home-page-navigation-bar: done
-  1-3-home-page-search-with-autocomplete: backlog
+  1-3-home-page-search-with-autocomplete: done
   1-4-how-it-works-section: backlog
   1-5-building-search-and-filtering: backlog
   1-6-search-pagination-and-empty-states: backlog

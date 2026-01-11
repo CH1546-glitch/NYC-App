@@ -15,6 +15,13 @@ import { users, type User } from "@shared/models/auth";
 import { db } from "./db";
 import { eq, and, ilike, or, desc, asc, sql, count, avg } from "drizzle-orm";
 
+// Lightweight type for autocomplete suggestions
+export interface BuildingSuggestion {
+  id: string;
+  name: string;
+  address: string;
+}
+
 export interface IStorage {
   // Buildings
   getBuildings(filters?: {
@@ -25,6 +32,7 @@ export interface IStorage {
     status?: string;
   }): Promise<BuildingWithRatings[]>;
   getBuilding(id: string): Promise<BuildingWithRatings | undefined>;
+  getBuildingsAutocomplete(query: string): Promise<BuildingSuggestion[]>;
   createBuilding(building: InsertBuilding): Promise<Building>;
   updateBuildingStatus(id: string, status: string): Promise<Building | undefined>;
   getPendingBuildings(): Promise<Building[]>;
@@ -171,6 +179,33 @@ export class DatabaseStorage implements IStorage {
 
   async getPendingBuildings(): Promise<Building[]> {
     return db.select().from(buildings).where(eq(buildings.status, "pending"));
+  }
+
+  async getBuildingsAutocomplete(query: string): Promise<BuildingSuggestion[]> {
+    // Return empty array for queries less than 2 characters
+    if (!query || query.length < 2) {
+      return [];
+    }
+
+    const results = await db
+      .select({
+        id: buildings.id,
+        name: buildings.name,
+        address: buildings.address,
+      })
+      .from(buildings)
+      .where(
+        and(
+          eq(buildings.status, "approved"),
+          or(
+            ilike(buildings.name, `%${query}%`),
+            ilike(buildings.address, `%${query}%`)
+          )
+        )
+      )
+      .limit(8);
+
+    return results;
   }
 
   async getReviewsByBuilding(buildingId: string, sortBy?: string): Promise<ReviewWithDetails[]> {

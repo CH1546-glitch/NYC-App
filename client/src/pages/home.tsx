@@ -1,19 +1,19 @@
-import { useState } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Navigation } from "@/components/navigation";
+import { SearchAutocomplete } from "@/components/search-autocomplete";
 import { Shield } from "lucide-react";
 import heroVideo from "@assets/NYC_Video.mp4";
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [, setLocation] = useLocation();
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      setLocation(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+  const handleBuildingSelect = (building: { id: string; name: string; address: string }) => {
+    setLocation(`/building/${building.id}`);
+  };
+
+  const handleSearch = (query: string) => {
+    if (query) {
+      setLocation(`/search?q=${encodeURIComponent(query)}`);
     } else {
       setLocation("/search");
     }
@@ -47,28 +47,12 @@ export default function Home() {
             Honest, anonymous reviews from real NYC renters
           </h1>
 
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-8" role="search">
-            <div className="flex gap-0 bg-white p-0">
-              <div className="relative flex-1">
-                <Input
-                  type="search"
-                  placeholder="Search by building name or address"
-                  className="h-14 text-base border-0 bg-transparent focus-visible:ring-0 text-foreground rounded-none px-5 font-light"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  data-testid="input-hero-search"
-                />
-              </div>
-              <Button
-                type="submit"
-                size="lg"
-                className="h-14 px-10 text-sm tracking-widest uppercase rounded-none font-medium bg-black hover:bg-black/90 text-white border-black"
-                data-testid="button-hero-search"
-              >
-                Search
-              </Button>
-            </div>
-          </form>
+          <SearchAutocomplete
+            onSelect={handleBuildingSelect}
+            onSearch={handleSearch}
+            placeholder="Search by building name or address"
+            className="max-w-2xl mx-auto mb-8"
+          />
 
           <p className="text-base md:text-lg text-white/70 max-w-xl mx-auto font-light tracking-wide">
             Make informed decisions about your next apartment. Read and share authentic reviews about buildings across all five boroughs.
