@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { SearchAutocomplete } from "@/components/search-autocomplete";
-import { Shield } from "lucide-react";
+import { Shield, Search, Star, PenLine } from "lucide-react";
 import heroVideo from "@assets/NYC_Video.mp4";
 
 export default function Home() {
@@ -64,14 +64,12 @@ export default function Home() {
       <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center mb-20">
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-4">The Process</p>
             <h2 className="font-serif text-3xl md:text-5xl font-normal">How It Works</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-12">
             <div className="text-center">
-              <div className="w-px h-12 bg-border mx-auto mb-8" />
-              <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">01</p>
+              <Search className="h-10 w-10 mx-auto mb-6 text-muted-foreground" strokeWidth={1} aria-hidden="true" />
               <h3 className="font-serif text-2xl font-normal mb-4">Search</h3>
               <p className="text-muted-foreground font-light leading-relaxed">
                 Browse thousands of NYC apartment buildings by name, address, or neighborhood
@@ -79,17 +77,15 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-px h-12 bg-border mx-auto mb-8" />
-              <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">02</p>
-              <h3 className="font-serif text-2xl font-normal mb-4">Discover</h3>
+              <Star className="h-10 w-10 mx-auto mb-6 text-muted-foreground" strokeWidth={1} aria-hidden="true" />
+              <h3 className="font-serif text-2xl font-normal mb-4">Read Reviews</h3>
               <p className="text-muted-foreground font-light leading-relaxed">
                 Get detailed insights on noise, cleanliness, maintenance, safety, and more
               </p>
             </div>
 
             <div className="text-center">
-              <div className="w-px h-12 bg-border mx-auto mb-8" />
-              <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">03</p>
+              <PenLine className="h-10 w-10 mx-auto mb-6 text-muted-foreground" strokeWidth={1} aria-hidden="true" />
               <h3 className="font-serif text-2xl font-normal mb-4">Contribute</h3>
               <p className="text-muted-foreground font-light leading-relaxed">
                 Help fellow renters by anonymously sharing your honest apartment review

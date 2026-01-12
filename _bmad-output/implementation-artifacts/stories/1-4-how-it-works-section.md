@@ -1,6 +1,6 @@
 # Story 1.4: How It Works Section
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -28,32 +28,38 @@ so that **I understand the value and how to participate**.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Add icons to each step (AC: #3)
-  - [ ] Import appropriate icons from `lucide-react` (Search, BookOpen, PenLine)
-  - [ ] Add icon above each step number with consistent sizing
-  - [ ] Style icons to match editorial design (muted color, appropriate size)
+- [x] Task 1: Add icons to each step (AC: #3)
+  - [x] Import appropriate icons from `lucide-react` (Search, Star, PenLine)
+  - [x] Add icon above each step number with consistent sizing (h-10 w-10)
+  - [x] Style icons to match editorial design (muted color, strokeWidth={1})
 
-- [ ] Task 2: Review step naming alignment (AC: #2)
-  - [ ] Verify current "Discover" step aligns with "Read Reviews" intent
-  - [ ] Update step title if needed for clarity
+- [x] Task 2: Review step naming alignment (AC: #2)
+  - [x] Verify current "Discover" step aligns with "Read Reviews" intent
+  - [x] Update step title from "Discover" to "Read Reviews" for clarity
 
-- [ ] Task 3: Verify responsive behavior (AC: #1, #4)
-  - [ ] Test 3-column grid on desktop
-  - [ ] Test stacked layout on mobile
-  - [ ] Ensure icons scale appropriately
+- [x] Task 3: Verify responsive behavior (AC: #1, #4)
+  - [x] Test 3-column grid on desktop
+  - [x] Test stacked layout on mobile
+  - [x] Ensure icons scale appropriately
+
+- [x] Task 4: Remove "The Process" subtitle (User Request 2026-01-12)
+  - [x] Remove `<p>` element with "The Process" text from section header
+
+- [x] Task 5: Remove step numbers (User Request 2026-01-12)
+  - [x] Remove "01", "02", "03" number elements below icons
 
 ## Dev Notes
 
 ### Current Implementation Status
 
-**BROWNFIELD CONTEXT**: The "How It Works" section already exists in `client/src/pages/home.tsx` (lines 64-99). The section has the 3-step structure but is missing icons per AC #3.
+**BROWNFIELD CONTEXT**: The "How It Works" section exists in `client/src/pages/home.tsx` (lines 64-96).
 
-**Existing Implementation** (`client/src/pages/home.tsx` lines 64-99):
+**Current Implementation** (`client/src/pages/home.tsx` lines 64-96):
 ```jsx
 <section className="py-24 bg-background">
-  <!-- 3-step grid with Search, Discover, Contribute -->
-  <!-- Each step has: decorative line, number (01/02/03), title, description -->
-  <!-- NO icons currently -->
+  <!-- 3-step grid with Search, Read Reviews, Contribute -->
+  <!-- Each step has: icon (Search/Star/PenLine), title, description -->
+  <!-- Clean minimal design without numbers or subtitle -->
 </section>
 ```
 
@@ -94,11 +100,11 @@ From lucide-react:
 ### Testing Requirements
 
 **Manual Testing Checklist**:
-- [ ] Icons display correctly on desktop
-- [ ] Icons display correctly on mobile
-- [ ] Icons have appropriate color (muted-foreground)
-- [ ] Icons are sized consistently (suggest h-8 w-8 or h-10 w-10)
-- [ ] Section maintains editorial aesthetic
+- [x] Icons display correctly on desktop
+- [x] Icons display correctly on mobile
+- [x] Icons have appropriate color (muted-foreground)
+- [x] Icons are sized consistently (h-10 w-10)
+- [x] Section maintains editorial aesthetic
 
 ### Previous Story Intelligence
 
@@ -127,16 +133,30 @@ From lucide-react:
 ## Dev Agent Record
 
 ### Agent Model Used
+claude-opus-4-5-20251101
 
 ### Debug Log References
+N/A
 
 ### Completion Notes List
+- All acceptance criteria met
+- Added aria-hidden="true" to decorative icons for accessibility
+- Code review found 1 low-severity issue (fixed)
+
+### Code Review Summary
+| # | Severity | Issue | Status |
+|---|----------|-------|--------|
+| 1 | LOW | Icons missing aria-hidden="true" | FIXED |
 
 ### Change Log
 
 | Date | Change | Files Modified |
 |------|--------|----------------|
+| 2026-01-11 | Added icons to How It Works steps, renamed "Discover" to "Read Reviews" | client/src/pages/home.tsx |
+| 2026-01-12 | Removed "The Process" subtitle, removed step numbers (01/02/03) per user request | client/src/pages/home.tsx |
 
 ### File List
 
 _Files created or modified during implementation:_
+
+- `client/src/pages/home.tsx` - Added Search, Star, PenLine icons; renamed step 2 title
