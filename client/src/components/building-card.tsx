@@ -11,7 +11,7 @@ interface BuildingCardProps {
 
 export function BuildingCard({ building }: BuildingCardProps) {
   return (
-    <Link href={`/building/${building.id}`}>
+    <Link href={`/building/${building.id}`} aria-label={`View details for ${building.name} at ${building.address}`}>
       <Card className="group hover-elevate cursor-pointer overflow-hidden h-full" data-testid={`building-card-${building.id}`}>
         <div className="aspect-[4/3] bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">

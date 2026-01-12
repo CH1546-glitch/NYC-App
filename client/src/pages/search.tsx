@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useLocation, useSearch } from "wouter";
+import { useSearch } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Navigation } from "@/components/navigation";
 import { BuildingCard } from "@/components/building-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search, Building2, Plus, Filter } from "lucide-react";
+import { Search, Building2, Plus, AlertCircle } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -36,7 +36,7 @@ export default function SearchPage() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const { data: buildings, isLoading } = useQuery<BuildingWithRatings[]>({
+  const { data: buildings, isLoading, error } = useQuery<BuildingWithRatings[]>({
     queryKey: ["/api/buildings", debouncedQuery, neighborhood, buildingType, sortBy],
     queryFn: async ({ queryKey }) => {
       const [, q, hood, type, sort] = queryKey as string[];
@@ -134,6 +134,19 @@ export default function SearchPage() {
               {Array.from({ length: 6 }).map((_, i) => (
                 <Skeleton key={i} className="h-80 rounded-xl" />
               ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-20">
+              <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-6">
+                <AlertCircle className="h-10 w-10 text-destructive" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Unable to load buildings</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                Something went wrong while fetching buildings. Please try again.
+              </p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Retry
+              </Button>
             </div>
           ) : filteredBuildings.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

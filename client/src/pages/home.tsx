@@ -99,9 +99,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-4">Your Data</p>
               <h2 className="font-serif text-3xl md:text-5xl font-normal mb-8">
-                Privacy, Protected
+                Privacy Protected
               </h2>
               <p className="text-lg text-muted-foreground font-light leading-relaxed mb-8">
                 We understand the importance of honest feedback. That's why all reviews can be posted anonymously, protecting you from any potential retaliation.
@@ -114,17 +113,14 @@ export default function Home() {
             <div className="md:border-l md:border-border md:pl-12">
               <div className="space-y-8">
                 <div>
-                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">01</p>
                   <h4 className="font-serif text-xl mb-2">No personal info shared</h4>
                   <p className="text-sm text-muted-foreground font-light">Your identity stays private</p>
                 </div>
                 <div>
-                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">02</p>
                   <h4 className="font-serif text-xl mb-2">Moderated content</h4>
                   <p className="text-sm text-muted-foreground font-light">All reviews are checked for quality</p>
                 </div>
                 <div>
-                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">03</p>
                   <h4 className="font-serif text-xl mb-2">Community driven</h4>
                   <p className="text-sm text-muted-foreground font-light">Built by renters, for renters</p>
                 </div>
