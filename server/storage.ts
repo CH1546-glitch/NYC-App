@@ -22,6 +22,12 @@ export interface BuildingSuggestion {
   address: string;
 }
 
+export interface PaginatedBuildings {
+  buildings: BuildingWithRatings[];
+  total: number;
+  hasMore: boolean;
+}
+
 export interface IStorage {
   // Buildings
   getBuildings(filters?: {
@@ -30,7 +36,9 @@ export interface IStorage {
     buildingType?: string;
     sortBy?: string;
     status?: string;
-  }): Promise<BuildingWithRatings[]>;
+    limit?: number;
+    offset?: number;
+  }): Promise<PaginatedBuildings>;
   getBuilding(id: string): Promise<BuildingWithRatings | undefined>;
   getBuildingsAutocomplete(query: string): Promise<BuildingSuggestion[]>;
   createBuilding(building: InsertBuilding): Promise<Building>;
@@ -60,7 +68,9 @@ export class DatabaseStorage implements IStorage {
     buildingType?: string;
     sortBy?: string;
     status?: string;
-  }): Promise<BuildingWithRatings[]> {
+    limit?: number;
+    offset?: number;
+  }): Promise<PaginatedBuildings> {
     const conditions = [eq(buildings.status, filters?.status || "approved")];
 
     if (filters?.q) {
@@ -129,7 +139,18 @@ export class DatabaseStorage implements IStorage {
       buildingsWithRatings.sort((a, b) => b.overallRating - a.overallRating);
     }
 
-    return buildingsWithRatings;
+    // Apply pagination
+    const total = buildingsWithRatings.length;
+    const limit = filters?.limit || 12;
+    const offset = filters?.offset || 0;
+    const paginatedBuildings = buildingsWithRatings.slice(offset, offset + limit);
+    const hasMore = offset + limit < total;
+
+    return {
+      buildings: paginatedBuildings,
+      total,
+      hasMore,
+    };
   }
 
   async getBuilding(id: string): Promise<BuildingWithRatings | undefined> {

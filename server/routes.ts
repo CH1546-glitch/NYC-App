@@ -16,14 +16,18 @@ export async function registerRoutes(
   // Buildings API
   app.get("/api/buildings", async (req, res) => {
     try {
-      const { q, neighborhood, buildingType, sortBy } = req.query;
-      const buildings = await storage.getBuildings({
+      const { q, neighborhood, buildingType, sortBy, limit, offset } = req.query;
+      const parsedLimit = limit ? parseInt(limit as string, 10) : undefined;
+      const parsedOffset = offset ? parseInt(offset as string, 10) : undefined;
+      const result = await storage.getBuildings({
         q: q as string,
         neighborhood: neighborhood as string,
         buildingType: buildingType as string,
         sortBy: sortBy as string,
+        limit: parsedLimit && !isNaN(parsedLimit) ? parsedLimit : undefined,
+        offset: parsedOffset && !isNaN(parsedOffset) ? parsedOffset : undefined,
       });
-      res.json(buildings);
+      res.json(result);
     } catch (error) {
       console.error("Error fetching buildings:", error);
       res.status(500).json({ message: "Failed to fetch buildings" });

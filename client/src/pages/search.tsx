@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearch } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Navigation } from "@/components/navigation";
 import { BuildingCard } from "@/components/building-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search, Building2, Plus, AlertCircle } from "lucide-react";
+import { Search, Building2, Plus, AlertCircle, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -17,6 +17,14 @@ import {
 import { Link } from "wouter";
 import type { BuildingWithRatings } from "@shared/schema";
 import { NYC_NEIGHBORHOODS, BUILDING_TYPES } from "@shared/schema";
+
+interface PaginatedResponse {
+  buildings: BuildingWithRatings[];
+  total: number;
+  hasMore: boolean;
+}
+
+const ITEMS_PER_PAGE = 12;
 
 export default function SearchPage() {
   const searchParams = useSearch();
@@ -29,6 +37,8 @@ export default function SearchPage() {
   const [buildingType, setBuildingType] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("rating");
 
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
@@ -36,24 +46,62 @@ export default function SearchPage() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const { data: buildings, isLoading, error } = useQuery<BuildingWithRatings[]>({
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<PaginatedResponse>({
     queryKey: ["/api/buildings", debouncedQuery, neighborhood, buildingType, sortBy],
-    queryFn: async ({ queryKey }) => {
+    queryFn: async ({ queryKey, pageParam = 0 }) => {
       const [, q, hood, type, sort] = queryKey as string[];
       const params = new URLSearchParams();
       if (q) params.set("q", q);
       if (hood && hood !== "all") params.set("neighborhood", hood);
       if (type && type !== "all") params.set("buildingType", type);
       if (sort) params.set("sortBy", sort);
-      const queryString = params.toString();
-      const url = queryString ? `/api/buildings?${queryString}` : "/api/buildings";
+      params.set("limit", String(ITEMS_PER_PAGE));
+      params.set("offset", String(pageParam));
+      const url = `/api/buildings?${params.toString()}`;
       const res = await fetch(url, { credentials: "include" });
       if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
       return res.json();
     },
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.hasMore) return undefined;
+      return allPages.length * ITEMS_PER_PAGE;
+    },
+    initialPageParam: 0,
   });
 
-  const filteredBuildings = buildings || [];
+  // Intersection Observer for infinite scroll
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  useEffect(() => {
+    const element = loadMoreRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+      rootMargin: "100px",
+    });
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [handleObserver]);
+
+  const allBuildings = data?.pages.flatMap((page) => page.buildings) || [];
+  const totalCount = data?.pages[0]?.total || 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -65,7 +113,7 @@ export default function SearchPage() {
             <div>
               <h1 className="text-3xl font-bold mb-2">Search Buildings</h1>
               <p className="text-muted-foreground">
-                {filteredBuildings.length} building{filteredBuildings.length !== 1 ? "s" : ""} found
+                {totalCount} building{totalCount !== 1 ? "s" : ""} found
               </p>
             </div>
             <Link href="/add-building">
@@ -148,12 +196,29 @@ export default function SearchPage() {
                 Retry
               </Button>
             </div>
-          ) : filteredBuildings.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredBuildings.map((building) => (
-                <BuildingCard key={building.id} building={building} />
-              ))}
-            </div>
+          ) : allBuildings.length > 0 ? (
+            <>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {allBuildings.map((building) => (
+                  <BuildingCard key={building.id} building={building} />
+                ))}
+              </div>
+
+              {/* Infinite scroll sentinel */}
+              <div ref={loadMoreRef} className="py-8 flex justify-center">
+                {isFetchingNextPage && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Loading more buildings...</span>
+                  </div>
+                )}
+                {!hasNextPage && allBuildings.length > ITEMS_PER_PAGE && (
+                  <p className="text-muted-foreground text-sm">
+                    You've seen all {totalCount} buildings
+                  </p>
+                )}
+              </div>
+            </>
           ) : (
             <div className="text-center py-20">
               <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
